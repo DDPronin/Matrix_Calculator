@@ -15,7 +15,7 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     final int SCREEN_HEIGHT = 650;
     final int SCREEN_WIDTH = 540;
-
+    final String STAGE_TITTLE = "MATRIX";
     final String[] OPERATIONS_LIST = new String[]{"FIND DETERMINANT", "SOLVE THE EQUATION"};
     @Override
     public void start(Stage stage) throws IOException {
@@ -32,6 +32,7 @@ public class HelloApplication extends Application {
             back_to_main_menu_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
+                    stage.setTitle(STAGE_TITTLE);
                     stage.setScene(scene);
                 }
             });
@@ -45,7 +46,7 @@ public class HelloApplication extends Application {
             main_screen_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-
+                    stage.setTitle(operation_name);
                     stage.setScene(new_scene);
                 }
             });
@@ -53,7 +54,7 @@ public class HelloApplication extends Application {
         }
         sp.setContent(vBox);
 
-        stage.setTitle("Matrix");
+        stage.setTitle(STAGE_TITTLE);
         stage.setScene(scene);
         stage.show();
     }
