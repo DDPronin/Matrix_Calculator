@@ -1,15 +1,8 @@
-package com.company;
+package com.example.matrixcalc;
 
 import java.util.*;
 
-public class Main {
-    public static void main(String[] args) {
-        // write your code here
-    }
-}
-
-
-class Matrix {
+public class Matrix {
     private int rows; // количество строк матрицы
     private int columns; // количество столбцов матрицы
     private double[][] values; // двумерный массив, содержащий значения элементов матрицы
