@@ -4,7 +4,7 @@ import java.util.*;
 
 
 
-class Matrix {
+public class Matrix {
     private int rows; // количество строк матрицы
     private int columns; // количество столбцов матрицы
     private double[][] values; // двумерный массив, содержащий значения элементов матрицы
