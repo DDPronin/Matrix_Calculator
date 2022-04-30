@@ -2,6 +2,8 @@ package com.example.matrixcalc;
 
 import java.util.*;
 
+
+
 class Matrix {
     private int rows; // количество строк матрицы
     private int columns; // количество столбцов матрицы
@@ -134,7 +136,7 @@ class Matrix {
             }
             displayMatrix += "}\n{ ";
         }
-        return displayMatrix;
+        return displayMatrix.substring(0, -2);
     }
 
     // Сложение матриц (с изменением исходной)
@@ -197,13 +199,50 @@ class Matrix {
         }
     }
 
-    // Детерминант матрицы
-    public double getDeterminant(double[][] values) {
-        double det = 0;
-        return det; // В функцию передается двумерный массив, детерминант считается рекурсивно
+    public double[][] getCopy() {
+        double[][] copyOfMatrix = new double[rows][columns];
+        for (int i = 0; i < columns; ++i) {
+            for (int j = 0; j < rows; ++j) {
+                copyOfMatrix[i][j] = values[i][j];
+            }
+        }
+        return copyOfMatrix;
     }
 
-    // Поиск минора для детерминанта
+    double[][] A = getCopy();
+
+    // Детерминант матрицы
+    public double getDeterminant(double[][] A) {
+        double temp[][];
+        double result = 0;
+
+        if (A.length == 1) {
+            result = A[0][0];
+        }
+
+        if (A.length == 2) {
+            result = ((A[0][0] * A[1][1]) - (A[0][1] * A[1][0]));
+        }
+
+        for (int i = 0; i < A[0].length; i++) {
+            temp = new double[A.length - 1][A[0].length - 1];
+
+            for (int j = 1; j < A.length; j++) {
+                for (int k = 0; k < A[0].length; k++) {
+                    if (k < i) {
+                        temp[j - 1][k] = A[j][k];
+                    } else if (k > i) {
+                        temp[j - 1][k - 1] = A[j][k];
+                    }
+                }
+            }
+
+            result += A[0][i] * Math.pow(-1, (double) i) * getDeterminant(temp);
+        }
+        return result;
+    }
+
+    // Поиск минора
     private double[][] getMinor(int row, int column) {
         int minorLength = rows - 1;
         double[][] minor = new double[minorLength][minorLength];
@@ -226,7 +265,7 @@ class Matrix {
         return minor;
     }
 
-    // Решение СЛАУ (Передаем кол-во строк, столбцов, матрицу коэффициентов и массив свободных членов)
+    // Решение СЛАУ (Передаем кол-во строк, столбцов, далее матрицу коэффициентов и массив свободных членов)
     public double[] Gauss(int n, int m, Matrix A, double[] freeNums) {
         int size = n;
         for (int p = 0; p < size; ++p) {
