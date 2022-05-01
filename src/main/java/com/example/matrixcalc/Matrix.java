@@ -305,5 +305,9 @@ public class Matrix {
         }
         return solutions;
     }
+    public static int sum(int a, int b){
+        return a+b;
+    }
+
     //================================================================================================================//
 }
