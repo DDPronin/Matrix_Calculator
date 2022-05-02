@@ -3,7 +3,6 @@ package com.example.matrixcalc;
 import java.util.*;
 
 
-
 public class Matrix {
     private int rows; // количество строк матрицы
     private int columns; // количество столбцов матрицы
@@ -14,6 +13,13 @@ public class Matrix {
         this.rows = rows;
         this.columns = columns;
         this.values = new double[rows][columns];
+    }
+
+    // Конструктор, создающий матрицу по переданному двумерному массиву
+    public Matrix(double[][] values) {
+        this.values = values;
+        this.rows = values.length;
+        this.columns = values[0].length;
     }
 
     // Возращает количество строк матрицы
@@ -101,8 +107,8 @@ public class Matrix {
     // Возвращает столбец матрицы по индексу в виде массива
     public double[] getColumn(int columnIndex) {
         double[] column = new double[rows];
-        if ((0 <= columnIndex) & (columnIndex <= rows - 1)) {
-            for (int i = 0; i < columns; i++) {
+        if ((0 <= columnIndex) & (columnIndex <= columns - 1)) {
+            for (int i = 0; i < rows; i++) {
                 column[i] = values[i][columnIndex];
             }
             return column;
@@ -113,9 +119,9 @@ public class Matrix {
 
     // Меняет столбец матрицы по индексу на введенный массив.
     public void setColumn(int columnIndex, double[] columnValues) {
-        if ((0 <= columnIndex) & (columnIndex <= rows - 1)) {
+        if ((0 <= columnIndex) & (columnIndex <= columns - 1)) {
             if (columnValues.length == columns) {
-                for (int i = 0; i < columns; i++) {
+                for (int i = 0; i < rows; i++) {
                     values[i][columnIndex] = columnValues[i];
                 }
             } else {
@@ -126,9 +132,14 @@ public class Matrix {
         }
     }
 
+    // Возвращает содержимое матрицы в виде двумерного массива
+    public double[][] getValues() {
+        return values;
+    }
+
     //================================================================================================================//
     // Вывод матрицы
-    public String printMatrix() {
+    public String toString() {
         String displayMatrix = "{ ";
         for (int i = 0; i < columns; ++i) {
             for (int j = 0; j < rows; ++j) {
@@ -142,8 +153,8 @@ public class Matrix {
     // Сложение матриц (с изменением исходной)
     public void addMatrix(Matrix toAdd) {
         if ((rows == toAdd.getRowsQuantity()) & (columns == toAdd.getColumnsQuantity())) {
-            for (int i = 0; i < columns; ++i) {
-                for (int j = 0; j < rows; ++j) {
+            for (int i = 0; i < rows; ++i) {
+                for (int j = 0; j < columns; ++j) {
                     values[i][j] += toAdd.getElementValue(i, j);
                 }
             }
@@ -155,8 +166,8 @@ public class Matrix {
     // Вычитание матриц (с изменением исходной)
     public void diffMatrix(Matrix toDiff) {
         if ((rows == toDiff.getRowsQuantity()) & (columns == toDiff.getColumnsQuantity())) {
-            for (int i = 0; i < columns; ++i) {
-                for (int j = 0; j < rows; ++j) {
+            for (int i = 0; i < rows; ++i) {
+                for (int j = 0; j < columns; ++j) {
                     values[i][j] -= toDiff.getElementValue(i, j);
                 }
             }
@@ -183,13 +194,17 @@ public class Matrix {
 
     // Умножение матриц (с получением новой)
     public Matrix multiplyMatrix(Matrix toMultiply) {
-        int columnsQuantitySecondMatrix = toMultiply.getRowsQuantity();
-        if (columns == columnsQuantitySecondMatrix) {
-            Matrix newMatrix = new Matrix(rows, columnsQuantitySecondMatrix);
-            for (int i = 0; i < rows; ++i) {
-                for (int u = 0; u < columnsQuantitySecondMatrix; ++u) {
-                    for (int j = 0; j < columns; ++j) {
-                        newMatrix.setElementValue(i, u, values[i][j] * getElementValue(j, u));
+        int rowsFirst = rows;
+        int columnsFirst = columns;
+        int rowsSecond = toMultiply.getRowsQuantity();
+        int columnsSecond = toMultiply.getColumnsQuantity();
+        if (columnsFirst == rowsSecond) {
+            Matrix newMatrix = new Matrix(rowsFirst, columnsSecond);
+            for (int i = 0; i < rowsFirst; ++i) {
+                for (int j = 0; j < columnsSecond; ++j) {
+                    for (int k = 0; k < rowsSecond; ++k) {
+                        newMatrix.setElementValue(i, j, newMatrix.getElementValue(i, j) +
+                                values[i][k] * toMultiply.getElementValue(k, j));
                     }
                 }
             }
@@ -211,35 +226,80 @@ public class Matrix {
 
     double[][] A = getCopy();
 
-    // Детерминант матрицы
-    public double getDeterminant(double[][] A) {
-        double temp[][];
-        double result = 0;
+    //Детерминант матрицы
+//    public static double getDeterminant(double[][] A) {
+//        if (A.length != A[0].length) {
+//            throw new RuntimeException("Non-square matrix has no determinant!");
+//        }
+//        double temp[][];
+//        double result = 0;
+//
+//        if (A.length == 1) {
+//            result = A[0][0];
+//        }
+//
+//        if (A.length == 2) {
+//            result = ((A[0][0] * A[1][1]) - (A[0][1] * A[1][0]));
+//        }
+//
+//        for (int i = 0; i < A[0].length; i++) {
+//            temp = new double[A.length - 1][A[0].length - 1];
+//
+//            for (int j = 1; j < A.length; j++) {
+//                for (int k = 0; k < A[0].length; k++) {
+//                    if (k < i) {
+//                        temp[j-1][k] = A[j][k];
+//                    } else if (k > i) {
+//                        temp[j-1][k-1] = A[j][k];
+//                    }
+//                }
+//            }
+//
+//            result += A[0][i] * Math.pow(-1, (double) i) * getDeterminant(temp);
+//        }
+//        return result;
+//    }
 
-        if (A.length == 1) {
-            result = A[0][0];
+    // Возвращает определитель матрицы
+    public static double getDeterminant(Matrix matrix) {
+        int size = matrix.getRowsQuantity();
+        double[][] values = matrix.getValues();
+        int mul = 1;
+        if (values.length != values[0].length) {
+            throw new RuntimeException("Non-square matrix has no determinant!");
         }
-
-        if (A.length == 2) {
-            result = ((A[0][0] * A[1][1]) - (A[0][1] * A[1][0]));
+        if (size == 1) {
+            return values[0][0];
         }
-
-        for (int i = 0; i < A[0].length; i++) {
-            temp = new double[A.length - 1][A[0].length - 1];
-
-            for (int j = 1; j < A.length; j++) {
-                for (int k = 0; k < A[0].length; k++) {
-                    if (k < i) {
-                        temp[j - 1][k] = A[j][k];
-                    } else if (k > i) {
-                        temp[j - 1][k - 1] = A[j][k];
+        while (size > 2) {
+            double[][] M = new double[size-1][size-1];
+            int next_index = 1;
+            while (values[0][0] == 0) {
+                if (values[next_index][0] > 0) {
+                    for (int k = 0; k < size; k++) {
+                        double temp = values[0][k];
+                        values[0][k] = values[next_index][k];
+                        values[next_index][k] = temp;
                     }
+                    mul = (int) (mul * Math.pow((-1),
+                            (next_index)));
                 }
             }
-
-            result += A[0][i] * Math.pow(-1, (double) i) * getDeterminant(temp);
+            double p = values[0][0];
+            mul = (int) (mul * Math.pow(1 / p, size - 2));
+            for (int i = 1; i < size; i++) {
+                for (int j = 1; j < size; j++) {
+                    M[i-1][j-1] = values[0][0] * values[i][j] - values[i][0] * values[0][j];
+                }
+            }
+            for (int i = 0; i < (size - 1); i++) {
+                for (int j = 0; j < (size - 1); j++) {
+                    values[i][j] = M[i][j];
+                }
+            }
+            size--;
         }
-        return result;
+        return mul * (values[0][0] * values[1][1] - values[0][1] * values[1][0]);
     }
 
     // Поиск минора
@@ -266,7 +326,12 @@ public class Matrix {
     }
 
     // Обратная матрица
-    public double[][] inverseMatrix(double[][] A) {
+    public static Matrix inverseMatrix(Matrix matrix) {
+
+        if (Math.abs(Matrix.getDeterminant(matrix)) <= 1e-10) {
+            throw new RuntimeException("That matrix has no inversed one!");
+        }
+        double[][] A = matrix.getValues();
         double temp;
         int N = A.length;
         double[][] E = new double[N][N];
@@ -303,13 +368,14 @@ public class Matrix {
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N; j++)
                 A[i][j] = E[i][j];
-
-        return A;
+        return new Matrix(A);
     }
 
 
     // Решение СЛАУ (Передаем кол-во строк, столбцов, далее матрицу коэффициентов и массив свободных членов)
-    public double[] Gauss(int n, int m, Matrix A, double[] freeNums) {
+    public static double[] Gauss(Matrix A, double[] freeNums) {
+        int n = A.getRowsQuantity();
+        int m = A.getColumnsQuantity();
         int size = n;
         for (int p = 0; p < size; ++p) {
             int max = p;
@@ -348,9 +414,39 @@ public class Matrix {
         }
         return solutions;
     }
-    public static int sum(int a, int b){
-        return a+b;
+
+    public static int sum(int a, int b) {
+        return a + b;
     }
 
     //================================================================================================================//
+
+    // Сравнение матриц
+    public static boolean isEquals(Matrix matrix1, Matrix matrix2) {
+        if ((matrix1.getValues().length == matrix2.getValues().length) &
+                (matrix1.getValues()[0].length == matrix2.getValues()[0].length)) {
+            for (int i = 0; i < matrix1.getValues().length; ++i) {
+                for (int j = 0; j < matrix1.getValues()[0].length; ++j) {
+                    if (matrix1.getValues()[i][j] != matrix2.getValues()[i][j]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // Сравнение массивов
+    public static boolean isEquals(double[] array1, double[] array2) {
+        if (array1.length == array2.length) {
+            for (int i = 0; i < array1.length; ++i) {
+                if (array1[i] != array2[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }
