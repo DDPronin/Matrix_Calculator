@@ -136,7 +136,8 @@ public class HelloApplication extends Application {
             calculate_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    getMatrixFromGrid(input_matrix_gridPane_left_panel);
+                    Matrix matri_from_right_grid = getMatrixFromGrid(input_matrix_gridPane_left_panel);
+                    
                 }
             });
             calculate_button.setPrefSize(right_panel_width, 80);
@@ -242,6 +243,7 @@ public class HelloApplication extends Application {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 TextField input_matrix_textField = new TextField();
+                input_matrix_textField.setFont(new Font(100/rows/columns +15));
                 input_matrix_textField.setPrefSize(SINGLE_BUTTON_WIDTH, SINGLE_BUTTON_HEIGHT);
                 gridPane.add(input_matrix_textField, j, i);
             }
