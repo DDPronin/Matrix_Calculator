@@ -217,6 +217,25 @@ public class Matrix {
 
     // Возвращает определитель матрицы
     public static double getDeterminant(Matrix matrix) {
+        double[][] A = matrix.getValues();
+        double res = 1, tmp;
+        for (int i = 0, index = 0; i < A.length; index = ++i) {
+            for (int j = i + 1; j < A.length; ++j)
+                if (Math.abs(A[j][i]) > Math.abs(A[index][i]))
+                    index = j;
+            if (Math.abs(A[index][i]) <= 0.0) return 0.;
+            if (index != i) res *= -1;
+            for (int j = i; j < A.length; ++j) {
+                tmp = A[index][j];
+                A[index][j] = A[i][j];
+                A[i][j] = tmp;}
+            for (int j = i + 1; j < A.length; ++j) {
+                tmp = A[j][i] / A[i][i];
+                for (int k = i; k < A.length; ++k)
+                    A[j][k] -= tmp * A[i][k];}
+            res *= A[i][i];}
+        return res;}
+ /*   public static double getDeterminant(Matrix matrix) {
         int size = matrix.getRowsQuantity();
         double[][] values = matrix.getValues();
         int mul = 1;
@@ -255,7 +274,7 @@ public class Matrix {
             size--;
         }
         return mul * (values[0][0] * values[1][1] - values[0][1] * values[1][0]);
-    }
+    }*/
 
     // Обратная матрица
     public static Matrix inverseMatrix(Matrix matrix) {
