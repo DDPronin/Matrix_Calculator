@@ -136,8 +136,8 @@ public class HelloApplication extends Application {
             calculate_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    Matrix matri_from_right_grid = getMatrixFromGrid(input_matrix_gridPane_left_panel);
-                    
+                    Matrix matrix_from_right_grid = getMatrixFromGrid(input_matrix_gridPane_left_panel);
+                    info_label.setText("   Состояние: " +"det = " + Matrix.getDeterminant(matrix_from_right_grid));
                 }
             });
             calculate_button.setPrefSize(right_panel_width, 80);
