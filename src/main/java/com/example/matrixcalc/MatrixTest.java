@@ -170,7 +170,7 @@ public class MatrixTest {
     @Test
     public void GaussTest() {
         System.out.println("Gauss Test:");
-        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix2, new double[]{1, 2}), new double[]{1, 2}));
-        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix4, new double[]{1, 2}), new double[]{0, 0.5}));
+//        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix2, new double[]{1, 2}), new double[]{1, 2}));
+//        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix4, new double[]{1, 2}), new double[]{0, 0.5}));
     }
 }

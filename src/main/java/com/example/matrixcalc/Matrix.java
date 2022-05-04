@@ -134,8 +134,8 @@ public class Matrix {
 
     public double[][] getCopy() {
         double[][] copyOfMatrix = new double[rows][columns];
-        for (int i = 0; i < columns; ++i) {
-            for (int j = 0; j < rows; ++j) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
                 copyOfMatrix[i][j] = values[i][j];
             }
         }
@@ -191,17 +191,10 @@ public class Matrix {
 
     // Умножение матрицы на число (с изменением исходной)
     public void multiplyMatrixByNum(double num) {
-        for (int i = 0; i < columns; ++i) {
-            for (int j = 0; j < rows; ++j) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
                 values[i][j] *= num;
             }
-        }
-    }
-
-    // Умножение строки матрицы (по индексу) на число (с изменением исходной)
-    public void multiplyMatrixRowByNum(int ind, double num) {
-        for (int i = 0; i < columns; ++i) {
-            values[ind][i] *= num;
         }
     }
 
@@ -247,47 +240,8 @@ public class Matrix {
                 for (int k = i; k < A.length; ++k)
                     A[j][k] -= tmp * A[i][k];}
             res *= A[i][i];}
-        return res;}
- /*   public static double getDeterminant(Matrix matrix) {
-        int size = matrix.getRowsQuantity();
-        double[][] values = matrix.getValues();
-        int mul = 1;
-        if (values.length != values[0].length) {
-            throw new RuntimeException("Non-square matrix has no determinant!");
-        }
-        if (size == 1) {
-            return values[0][0];
-        }
-        while (size > 2) {
-            double[][] M = new double[size - 1][size - 1];
-            int next_index = 1;
-            while (values[0][0] == 0) {
-                if (values[next_index][0] > 0) {
-                    for (int k = 0; k < size; k++) {
-                        double temp = values[0][k];
-                        values[0][k] = values[next_index][k];
-                        values[next_index][k] = temp;
-                    }
-                    mul = (int) (mul * Math.pow((-1),
-                            (next_index)));
-                }
-            }
-            double p = values[0][0];
-            mul = (int) (mul * Math.pow(1 / p, size - 2));
-            for (int i = 1; i < size; i++) {
-                for (int j = 1; j < size; j++) {
-                    M[i - 1][j - 1] = values[0][0] * values[i][j] - values[i][0] * values[0][j];
-                }
-            }
-            for (int i = 0; i < (size - 1); i++) {
-                for (int j = 0; j < (size - 1); j++) {
-                    values[i][j] = M[i][j];
-                }
-            }
-            size--;
-        }
-        return mul * (values[0][0] * values[1][1] - values[0][1] * values[1][0]);
-    }*/
+        return res;
+    }
 
     // Обратная матрица
     public static Matrix inverseMatrix(Matrix matrix) {
@@ -335,55 +289,8 @@ public class Matrix {
         return new Matrix(A);
     }
 
-/*
-    // Обратная матрица
-    public static Matrix inverseMatrix(Matrix matrix) {
-        if (Math.abs(Matrix.getDeterminant(matrix)) <= 1e-10) {
-            throw new RuntimeException("That matrix has no inversed one!");
-        }
-        double[][] A = matrix.getValues();
-        double temp;
-        int N = A.length;
-        double[][] E = new double[N][N];
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++) {
-                E[i][j] = 0f;
-                if (i == j)
-                    E[i][j] = 1f;
-            }
-        for (int k = 0; k < N; k++) {
-            temp = A[k][k];
-            for (int j = 0; j < N; j++) {
-                A[k][j] /= temp;
-                E[k][j] /= temp;
-            }
-            for (int i = k + 1; i < N; i++) {
-                temp = A[i][k];
-                for (int j = 0; j < N; j++) {
-                    A[i][j] -= A[k][j] * temp;
-                    E[i][j] -= E[k][j] * temp;
-                }
-            }
-        }
-        for (int k = N - 1; k > 0; k--) {
-            for (int i = k - 1; i >= 0; i--) {
-                temp = A[i][k];
-                for (int j = 0; j < N; j++) {
-                    A[i][j] -= A[k][j] * temp;
-                    E[i][j] -= E[k][j] * temp;
-                }
-            }
-        }
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++)
-                A[i][j] = E[i][j];
-        return new Matrix(A);
-    }
-*/
-
-
     // Решение СЛАУ (Передаем кол-во строк, столбцов, далее матрицу коэффициентов и массив свободных членов)
-    public static double[] Gauss(Matrix A, double[] freeNums) {
+    public static Matrix Gauss(Matrix A, double[] freeNums) {
         int n = A.getRowsQuantity();
         int m = A.getColumnsQuantity();
         int size = n;
@@ -411,18 +318,18 @@ public class Matrix {
                 }
             }
         }
-        double[] solutions = new double[size];
+        double[][] solutions = new double[1][size];
         for (int i = size - 1; i >= 0; --i) {
             double sum = 0.0;
             for (int j = i + 1; j < size; j++) {
-                sum += A.getElementValue(i, j) * solutions[j];
+                sum += A.getElementValue(i, j) * solutions[0][j];
             }
-            solutions[i] = (freeNums[i] - sum) / A.getElementValue(i, i);
+            solutions[0][i] = (freeNums[i] - sum) / A.getElementValue(i, i);
         }
         if (n < m) {
             System.out.println("Infinite quantity of solutions");
         }
-        return solutions;
+        return new Matrix(solutions);
     }
 
 
