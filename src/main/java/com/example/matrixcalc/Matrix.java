@@ -132,9 +132,20 @@ public class Matrix {
         }
     }
 
+    public double[][] getCopy() {
+        double[][] copyOfMatrix = new double[rows][columns];
+        for (int i = 0; i < columns; ++i) {
+            for (int j = 0; j < rows; ++j) {
+                copyOfMatrix[i][j] = values[i][j];
+            }
+        }
+        return copyOfMatrix;
+    }
+
     // Возвращает содержимое матрицы в виде двумерного массива
     public double[][] getValues() {
-        return values;
+        double[][] values_copy = getCopy();
+        return values_copy;
     }
 
 
@@ -152,6 +163,8 @@ public class Matrix {
 
     // Сложение матриц (с изменением исходной)
     public void addMatrix(Matrix toAdd) {
+        System.out.println(columns);
+        System.out.println(this.toString());
         if ((rows == toAdd.getRowsQuantity()) & (columns == toAdd.getColumnsQuantity())) {
             for (int i = 0; i < rows; ++i) {
                 for (int j = 0; j < columns; ++j) {
@@ -280,7 +293,7 @@ public class Matrix {
     public static Matrix inverseMatrix(Matrix matrix) {
 
         if (Math.abs(Matrix.getDeterminant(matrix)) <= 1e-10) {
-            throw new RuntimeException("That matrix has no inversed one!");
+            return new Matrix(0,0);//throw new RuntimeException("That matrix has no inversed one!");
         }
         double[][] A = matrix.getValues();
         double temp;
