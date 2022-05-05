@@ -285,7 +285,8 @@ public class Matrix {
     }
 
     // Решение СЛАУ (Передаем кол-во строк, столбцов, далее матрицу коэффициентов и массив свободных членов)
-    public static Matrix Gauss(Matrix A, double[] freeNums) {
+    public static Matrix Gauss(Matrix A, Matrix freeNumsMatrix) {
+        double[] freeNums = freeNumsMatrix.getColumn(0);
         int n = A.getRowsQuantity();
         int m = A.getColumnsQuantity();
         int size = n;
@@ -324,7 +325,7 @@ public class Matrix {
         if (n < m) {
             System.out.println("Infinite quantity of solutions");
         }
-        return new Matrix(solutions);
+        return Matrix.getTransposedMatrix(new Matrix(solutions));
     }
 
 

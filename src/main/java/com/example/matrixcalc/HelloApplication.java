@@ -76,9 +76,6 @@ public class HelloApplication extends Application {
             Button calculate_button = new Button("CALCULATE!");
             calculate_button.setPrefSize(right_panel_width, 80);
             right_panel_template.getChildren().add(calculate_button);
-            // Button paste_matrix_button = new Button("PASTE");
-            // paste_matrix_button.setPrefSize(right_panel_width, 40);
-            // right_panel_template.getChildren().add(paste_matrix_button);
 
             HBox matrix_size_panel_hbox = new HBox();
 
@@ -161,7 +158,78 @@ public class HelloApplication extends Application {
 
 
             }
+            if (operation_name.equals("SOLVE THE EQUATION")) {
 
+
+                //input_matrix_gridPane_right_panel.getChildren().clear();
+                GridPane x_matrix_gridPane = new GridPane();
+                GridPane B_matrix_gridPane = new GridPane();
+
+
+                right_panel_main_gridPane.add(x_matrix_gridPane, 1, 0);
+                right_panel_main_gridPane.add(B_matrix_gridPane, 2, 0);
+
+                Label text_A_matrix = new Label("A");
+                text_A_matrix.setFont(new Font(40));
+                Label text_B_matrix = new Label("B");
+                text_B_matrix.setFont(new Font(40));
+                Label text_X_matrix = new Label("*  X = ");
+                text_X_matrix.setFont(new Font(40));
+
+                right_panel_main_gridPane.add(text_A_matrix, 0, 1);
+                right_panel_main_gridPane.add(text_B_matrix, 2, 1);
+                right_panel_main_gridPane.add(text_X_matrix, 1, 1);
+
+                right_panel_main_gridPane.setHgap(20);
+                right_panel_main_gridPane.setVgap(20);
+
+                generateInputMatrix(input_matrix_gridPane_right_panel, 3, 3, MANUAL_MATRIX_WIDTH / 3, SCREEN_HEIGHT / 2, info_label);
+                generateInputMatrix(B_matrix_gridPane, 3, 1, MANUAL_MATRIX_WIDTH / 3, SCREEN_HEIGHT / 2, info_label);
+                for (int i = 0; i < 3; i++) {
+                    Label x_label = new Label("x" + (i + 1));
+                    x_label.setFont(new Font(20));
+                    x_label.setPrefSize(MANUAL_MATRIX_WIDTH / 20, SCREEN_HEIGHT / 2 / 3);
+                    x_matrix_gridPane.add(x_label, 0, i);
+                }
+                //Matrix x_matrix = new Matrix(3,1);
+                confirm_size_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        int rows = Integer.parseInt(input_size_text_field.getText());
+
+                        generateInputMatrix(input_matrix_gridPane_right_panel, rows, rows, MANUAL_MATRIX_WIDTH / 3, SCREEN_HEIGHT / 2, info_label);
+                        generateInputMatrix(B_matrix_gridPane, rows, 1, MANUAL_MATRIX_WIDTH / 3, SCREEN_HEIGHT / 2, info_label);
+                        if (rows < 8) {
+                            x_matrix_gridPane.getChildren().clear();
+                            for (int i = 0; i < rows; i++) {
+                                Label x_label = new Label("x" + (i + 1));
+                                x_label.setFont(new Font(20));
+                                x_label.setPrefSize(MANUAL_MATRIX_WIDTH / 15, SCREEN_HEIGHT / 2 / rows);
+                                x_matrix_gridPane.add(x_label, 0, i);
+                            }
+                        }
+//                        generateInputMatrix(input_matrix_gridPane_right_panel,);
+                    }
+                });
+                calculate_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+
+                        Matrix B_matrix = getMatrixFromGrid(B_matrix_gridPane);
+                        B_matrix.transpose();
+                        Matrix A_matrix = getMatrixFromGrid(input_matrix_gridPane_right_panel);
+                        A_matrix.transpose();
+                        System.out.println(A_matrix.toString());
+                        System.out.println(B_matrix.toString());
+
+                        Matrix x_matrix = Matrix.Gauss(A_matrix, B_matrix);
+                        x_matrix.transpose();
+                        generateMatrixFromMatrix(x_matrix_gridPane, x_matrix, MANUAL_MATRIX_WIDTH / 5, SCREEN_HEIGHT / 2 , info_label);
+                        System.out.println(x_matrix);
+                    }
+                });
+
+            }
             if (operation_name.equals("GET INVERSE MATRIX")) {
 
 
@@ -196,28 +264,15 @@ public class HelloApplication extends Application {
                         }
                     }
                 });
-
-
             }
 
-
-
-
-
-            if((operation_name.equals("SUBTRACT"))||(operation_name.equals("SUM"))){
+            if ((operation_name.equals("SUBTRACT")) || (operation_name.equals("SUM"))) {
 
                 TextField colomns_2_textField = new TextField("3");
                 matrix_size_panel_hbox.getChildren().add(colomns_2_textField);
                 input_size_text_field.setPrefSize(right_panel_width / 6, 40);
                 colomns_2_textField.setPrefSize(right_panel_width / 6, 40);
-
-//                TextField colomns_3_textField = new TextField("3");
-  //              matrix_size_panel_hbox.getChildren().add(colomns_3_textField);
-    //            colomns_3_textField.setPrefSize(right_panel_width / 12, 40);
-
-
                 int currentMatrix_index = 1;
-
                 Matrix matrix1 = null;
                 Matrix matrix2 = null;
                 GridPane matrix_2_gridPane = new GridPane();
@@ -227,7 +282,7 @@ public class HelloApplication extends Application {
                 confirm_size_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                       // int col2 = Integer.parseInt(colomns_3_textField.getText());
+                        // int col2 = Integer.parseInt(colomns_3_textField.getText());
                         int col = Integer.parseInt(colomns_2_textField.getText());
                         int row = Integer.parseInt(input_size_text_field.getText());
                         generateInputMatrix(input_matrix_gridPane_right_panel, row, col, MANUAL_MATRIX_WIDTH / 2, SCREEN_HEIGHT / 2 - 35, info_label);
@@ -239,7 +294,7 @@ public class HelloApplication extends Application {
                 calculate_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                   //     int col2 = matrix_2_gridPane.getColumnCount();//Integer.parseInt(colomns_3_textField.getText());
+                        //     int col2 = matrix_2_gridPane.getColumnCount();//Integer.parseInt(colomns_3_textField.getText());
                         int col = input_matrix_gridPane_right_panel.getColumnCount();//Integer.parseInt(colomns_2_textField.getText());
                         int row = input_matrix_gridPane_right_panel.getRowCount();//Integer.parseInt(input_size_text_field.getText());
 
@@ -247,9 +302,10 @@ public class HelloApplication extends Application {
                         Matrix matrix_A = getMatrixFromGrid(input_matrix_gridPane_right_panel);
                         //System.out.println("\n");
                         Matrix matrix_B = getMatrixFromGrid(matrix_2_gridPane);
-                        if(operation_name.equals("SUM")) matrix_A.addMatrix(matrix_B);//matrix_B.multiplyMatrix(matrix_A);
+                        if (operation_name.equals("SUM"))
+                            matrix_A.addMatrix(matrix_B);//matrix_B.multiplyMatrix(matrix_A);
                         else matrix_A.diffMatrix(matrix_B);
-                        Matrix matrix_result =matrix_A;
+                        Matrix matrix_result = matrix_A;
                         System.out.println(matrix_result.toString());
 
 
@@ -259,11 +315,6 @@ public class HelloApplication extends Application {
                     }
                 });
             }
-
-
-
-
-
 
 
             if (operation_name.equals("MULTIPLY")) {
@@ -366,7 +417,7 @@ public class HelloApplication extends Application {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 Label output_matrix_Label = new Label(Double.toString(matrix.getElementValue(j, i)));
-                output_matrix_Label.setFont(new Font(SINGLE_BUTTON_HEIGHT / 2));
+                output_matrix_Label.setFont(new Font(SINGLE_BUTTON_HEIGHT / 4));
                 output_matrix_Label.setPrefSize(SINGLE_BUTTON_WIDTH, SINGLE_BUTTON_HEIGHT);
                 gridPane.add(output_matrix_Label, j, i);
             }

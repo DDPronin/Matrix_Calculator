@@ -163,6 +163,7 @@ public class MatrixTest {
         System.out.println(Matrix.isEquals(Matrix.inverseMatrix(matrix4),
                 new Matrix(new double[][]{{-2, 1}, {1.5, -0.5}})));
         System.out.println(Matrix.isEquals(Matrix.inverseMatrix(Matrix.inverseMatrix(matrix4)), matrix4));
+        //System.out.println(Matrix.isEquals(Matrix.inverseMatrix(new Matrix(new double[][]{{}, {}, {}}))), matrix4);
 
 
     }
@@ -170,7 +171,7 @@ public class MatrixTest {
     @Test
     public void GaussTest() {
         System.out.println("Gauss Test:");
-//        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix2, new double[]{1, 2}), new double[]{1, 2}));
-//        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix4, new double[]{1, 2}), new double[]{0, 0.5}));
+        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix2, new Matrix(new double[][]{{1}, {2}})), new Matrix(new double[][]{{1}, {2}})));
+        System.out.println(Matrix.isEquals(Matrix.Gauss(matrix4, new Matrix(new double[][]{{1}, {2}})), new Matrix(new double[][]{{0}, {0.5}})));
     }
 }
