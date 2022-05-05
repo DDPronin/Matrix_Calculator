@@ -2,7 +2,6 @@ package com.example.matrixcalc;
 
 import java.util.*;
 
-
 public class Matrix {
     private int rows; // количество строк матрицы
     private int columns; // количество столбцов матрицы
@@ -53,8 +52,8 @@ public class Matrix {
     // Возвращает копию матрицы после транспонирования. Исходная матрица остается неизменной
     public static Matrix getTransposedMatrix(Matrix matrix) {
         Matrix transposedMatrix = new Matrix(matrix.columns, matrix.rows);
-        for (int i = 0; i < matrix.rows; i++) {
-            for (int j = 0; j < matrix.columns; j++) {
+        for (int i = 0; i < matrix.rows; ++i) {
+            for (int j = 0; j < matrix.columns; ++j) {
                 transposedMatrix.values[j][i] = matrix.values[i][j];
             }
         }
@@ -64,8 +63,8 @@ public class Matrix {
     // Транспонирует исходную матрицу
     public void transpose() {
         double[][] transposedValues = new double[columns][rows];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
                 transposedValues[j][i] = values[i][j];
             }
         }
@@ -80,7 +79,7 @@ public class Matrix {
     public double[] getRow(int rowIndex) {
         double[] row = new double[columns];
         if ((0 <= rowIndex) & (rowIndex <= rows - 1)) {
-            for (int i = 0; i < columns; i++) {
+            for (int i = 0; i < columns; ++i) {
                 row[i] = values[rowIndex][i];
             }
             return row;
@@ -93,7 +92,7 @@ public class Matrix {
     public void setRow(int rowIndex, double[] newRowValues) {
         if ((0 <= rowIndex) & (rowIndex <= rows - 1)) {
             if (newRowValues.length == columns) {
-                for (int i = 0; i < columns; i++) {
+                for (int i = 0; i < columns; ++i) {
                     values[rowIndex][i] = newRowValues[i];
                 }
             } else {
@@ -108,7 +107,7 @@ public class Matrix {
     public double[] getColumn(int columnIndex) {
         double[] column = new double[rows];
         if ((0 <= columnIndex) & (columnIndex <= columns - 1)) {
-            for (int i = 0; i < rows; i++) {
+            for (int i = 0; i < rows; ++i) {
                 column[i] = values[i][columnIndex];
             }
             return column;
@@ -121,7 +120,7 @@ public class Matrix {
     public void setColumn(int columnIndex, double[] columnValues) {
         if ((0 <= columnIndex) & (columnIndex <= columns - 1)) {
             if (columnValues.length == columns) {
-                for (int i = 0; i < rows; i++) {
+                for (int i = 0; i < rows; ++i) {
                     values[i][columnIndex] = columnValues[i];
                 }
             } else {
@@ -148,9 +147,11 @@ public class Matrix {
         return values_copy;
     }
 
-
     // Вывод матрицы
     public String toString() {
+        if (values.length == 0) {
+            return "This matrix has no inversed one";
+        }
         String displayMatrix = "{ ";
         for (int i = 0; i < values.length; ++i) {
             for (int j = 0; j < values[0].length; ++j) {
@@ -158,13 +159,11 @@ public class Matrix {
             }
             displayMatrix += "}\n{ ";
         }
-        return displayMatrix.substring(0, displayMatrix.length() - 3);
+        return displayMatrix.substring(0, displayMatrix.length() - 2);
     }
 
     // Сложение матриц (с изменением исходной)
     public void addMatrix(Matrix toAdd) {
-        System.out.println(columns);
-        System.out.println(this.toString());
         if ((rows == toAdd.getRowsQuantity()) & (columns == toAdd.getColumnsQuantity())) {
             for (int i = 0; i < rows; ++i) {
                 for (int j = 0; j < columns; ++j) {
@@ -189,13 +188,15 @@ public class Matrix {
         }
     }
 
-    // Умножение матрицы на число (с изменением исходной)
-    public void multiplyMatrixByNum(double num) {
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < columns; ++j) {
-                values[i][j] *= num;
+    // Умножение матрицы на число (с получением новой)
+    public static Matrix multiplyMatrixByNum(Matrix matrix, double num) {
+        double mat[][] = matrix.getValues();
+        for (int i = 0; i < mat.length; ++i) {
+            for (int j = 0; j < mat[0].length; ++j) {
+                mat[i][j] *= num;
             }
         }
+        return new Matrix(mat);
     }
 
     // Умножение матриц (с получением новой)
@@ -221,7 +222,7 @@ public class Matrix {
     }
 
 
-    // Возвращает определитель матрицы
+    // Определитель матрицы
     public static double getDeterminant(Matrix matrix) {
         double[][] A = matrix.getValues();
         double res = 1, tmp;
@@ -234,59 +235,53 @@ public class Matrix {
             for (int j = i; j < A.length; ++j) {
                 tmp = A[index][j];
                 A[index][j] = A[i][j];
-                A[i][j] = tmp;}
+                A[i][j] = tmp;
+            }
             for (int j = i + 1; j < A.length; ++j) {
                 tmp = A[j][i] / A[i][i];
                 for (int k = i; k < A.length; ++k)
-                    A[j][k] -= tmp * A[i][k];}
-            res *= A[i][i];}
+                    A[j][k] -= tmp * A[i][k];
+            }
+            res *= A[i][i];
+        }
         return res;
     }
 
-    // Обратная матрица
+    // Алгебраическое дополнение
+    public static double valOfMinor(double[][] matrix, int rowNum, int colNum) {
+        final int n = matrix.length - 1;
+        final int m = matrix[0].length - 1;
+        double[][] result = new double[n][m];
+        for (int i = 0; i < matrix.length; ++i) {
+            boolean isRowDeleted = rowNum < i;
+            int resultRowIndex = isRowDeleted ? i - 1 : i; //сокращённый if else
+            for (int j = 0; j < matrix[i].length; ++j) {
+                boolean isColDeleted = colNum < j;
+                int resultColIndex = isColDeleted ? j - 1 : j;
+                if (rowNum != i && colNum != j)
+                    result[resultRowIndex][resultColIndex] = matrix[i][j];
+            }
+        }
+        Matrix res = new Matrix(result);
+        return Math.pow((-1), rowNum + colNum) * getDeterminant(res);
+    }
+
     public static Matrix inverseMatrix(Matrix matrix) {
-
-        if (Math.abs(Matrix.getDeterminant(matrix)) <= 1e-10) {
-            return new Matrix(0,0);//throw new RuntimeException("That matrix has no inversed one!");
+        if ((Math.abs(Matrix.getDeterminant(matrix)) <= 1e-10) | (matrix.getColumnsQuantity() != matrix.getRowsQuantity())) {
+            return new Matrix(0, 0); //throw new RuntimeException("That matrix has no inversed one!");
         }
-        double[][] A = matrix.getValues();
-        double temp;
-        int N = A.length;
-        double[][] E = new double[N][N];
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++) {
-                E[i][j] = 0f;
-
-                if (i == j)
-                    E[i][j] = 1f;
-            }
-        for (int k = 0; k < N; k++) {
-            temp = A[k][k];
-            for (int j = 0; j < N; j++) {
-                A[k][j] /= temp;
-                E[k][j] /= temp;
-            }
-            for (int i = k + 1; i < N; i++) {
-                temp = A[i][k];
-                for (int j = 0; j < N; j++) {
-                    A[i][j] -= A[k][j] * temp;
-                    E[i][j] -= E[k][j] * temp;
-                }
+        if (matrix.getRowsQuantity() == 1) {
+            return new Matrix(new double[][]{{1 / matrix.getElementValue(0, 0)}});
+        }
+        double[][] mat = matrix.getValues();
+        double[][] comp = new double[mat.length][mat.length];
+        for (int i = 0; i < mat.length; ++i) {
+            for (int j = 0; j < mat.length; ++j) {
+                comp[j][i] = valOfMinor(mat, i, j);
             }
         }
-        for (int k = N - 1; k > 0; k--) {
-            for (int i = k - 1; i >= 0; i--) {
-                temp = A[i][k];
-                for (int j = 0; j < N; j++) {
-                    A[i][j] -= A[k][j] * temp;
-                    E[i][j] -= E[k][j] * temp;
-                }
-            }
-        }
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++)
-                A[i][j] = E[i][j];
-        return new Matrix(A);
+        Matrix result = new Matrix(comp);
+        return multiplyMatrixByNum(result, 1 / getDeterminant(result));
     }
 
     // Решение СЛАУ (Передаем кол-во строк, столбцов, далее матрицу коэффициентов и массив свободных членов)
