@@ -152,7 +152,7 @@ public class HelloApplication extends Application {
                         Matrix matrix_from_right_grid = getMatrixFromGrid(input_matrix_gridPane_right_panel);
                         // System.out.println(matrix_from_right_grid.toString());
                         //System.out.println(Matrix.getDeterminant(matrix_from_right_grid));
-                        info_label.setText("" + "   ОТВЕТ: det = " + Matrix.getDeterminant(matrix_from_right_grid));
+                        info_label.setText("" + "   Answer: det = " + Matrix.getDeterminant(matrix_from_right_grid));
                     }
                 });
 
@@ -176,9 +176,17 @@ public class HelloApplication extends Application {
                 Label text_X_matrix = new Label("*  X = ");
                 text_X_matrix.setFont(new Font(40));
 
-                right_panel_main_gridPane.add(text_A_matrix, 0, 1);
-                right_panel_main_gridPane.add(text_B_matrix, 2, 1);
-                right_panel_main_gridPane.add(text_X_matrix, 1, 1);
+                BorderPane text_A_matrix_borderPane = new BorderPane();
+                BorderPane text_B_matrix_borderPane = new BorderPane();
+                BorderPane text_X_matrix_borderPane = new BorderPane();
+
+                text_A_matrix_borderPane.setCenter(text_A_matrix);
+                text_B_matrix_borderPane.setCenter(text_B_matrix);
+                text_X_matrix_borderPane.setCenter(text_X_matrix);
+
+                right_panel_main_gridPane.add(text_A_matrix_borderPane, 0, 1);
+                right_panel_main_gridPane.add(text_B_matrix_borderPane, 2, 1);
+                right_panel_main_gridPane.add(text_X_matrix_borderPane, 1, 1);
 
                 right_panel_main_gridPane.setHgap(20);
                 right_panel_main_gridPane.setVgap(20);
@@ -255,11 +263,11 @@ public class HelloApplication extends Application {
                         } catch (Exception e) {
                             //e.printStackTrace();
                             isInversedMatrixExist = false;
-                            info_label.setText("   Состояние: не существует обратной матрицы");
+                            info_label.setText("   Status: inversed matrix don't exist");
                         }
                         if (isInversedMatrixExist) {
                             generateMatrixFromMatrix(result_of_operation, inversed_matrix, right_panel_width, 100, info_label);
-                            info_label.setText("   Состояние: ответ найден, расположен выше");
+                            info_label.setText("   Status: answer is found");
 
                         }
                     }
@@ -310,7 +318,7 @@ public class HelloApplication extends Application {
 
 
                         generateMatrixFromMatrix(result_of_operation, matrix_result, right_panel_width, 100, info_label);
-                        info_label.setText("   Состояние: посчитано");
+                        info_label.setText("   Status: calculated");
 
                     }
                 });
@@ -366,7 +374,7 @@ public class HelloApplication extends Application {
 
 
                         generateMatrixFromMatrix(result_of_operation, matrix_result, right_panel_width, 100, info_label);
-                        info_label.setText("   Состояние: посчитано");
+                        info_label.setText("   Status: calculated");
 
                     }
                 });
@@ -408,7 +416,7 @@ public class HelloApplication extends Application {
 
     public void generateMatrixFromMatrix(GridPane gridPane, Matrix matrix, int gridWidth, int gridHeight, Label info_label_copy) {
         gridPane.getChildren().clear();
-        info_label_copy.setText("   Состояние:");
+        info_label_copy.setText("   Status:");
         int columns = matrix.getRowsQuantity();
         int rows = matrix.getColumnsQuantity();
         int SINGLE_BUTTON_WIDTH = gridWidth / columns;
@@ -427,11 +435,11 @@ public class HelloApplication extends Application {
     public void generateInputMatrix(GridPane gridPane, int rows, int columns, int gridWidth, int gridHeight, Label info_label_copy) {
 
         if ((rows > 7) | (columns > 7)) {
-            info_label_copy.setText("   Состояние: матрица слишком большая,\n   не могу отобразить");
+            info_label_copy.setText("   Status: it's too big");
             return;
         }
         gridPane.getChildren().clear();
-        info_label_copy.setText("   Состояние:");
+        info_label_copy.setText("   Status:");
         int SINGLE_BUTTON_WIDTH = gridWidth / columns;
         int SINGLE_BUTTON_HEIGHT = gridHeight / rows;
 
