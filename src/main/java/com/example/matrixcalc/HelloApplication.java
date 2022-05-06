@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -34,7 +35,7 @@ public class HelloApplication extends Application {
         SCREEN_HEIGHT = (int) Screen.getPrimary().getBounds().getHeight();
 
         stage.setMaximized(true);
-
+        stage.getIcons().add(new Image("file:src/main/resources/com/example/matrixcalc/begemot.jpg"));
 //        Scene scene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
 
 
@@ -424,8 +425,8 @@ public class HelloApplication extends Application {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                Label output_matrix_Label = new Label(Double.toString(matrix.getElementValue(j, i)));
-                output_matrix_Label.setFont(new Font(SINGLE_BUTTON_HEIGHT / 4));
+                Label output_matrix_Label = new Label(String.format("%.3f",matrix.getElementValue(j, i)));
+                output_matrix_Label.setFont(new Font(5 + SINGLE_BUTTON_HEIGHT /7));
                 output_matrix_Label.setPrefSize(SINGLE_BUTTON_WIDTH, SINGLE_BUTTON_HEIGHT);
                 gridPane.add(output_matrix_Label, j, i);
             }
@@ -446,7 +447,7 @@ public class HelloApplication extends Application {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 TextField input_matrix_textField = new TextField();
-                input_matrix_textField.setFont(new Font(SINGLE_BUTTON_HEIGHT / 4));
+                input_matrix_textField.setFont(new Font(5 + SINGLE_BUTTON_HEIGHT / 15));
                 input_matrix_textField.setPrefSize(SINGLE_BUTTON_WIDTH, SINGLE_BUTTON_HEIGHT);
                 gridPane.add(input_matrix_textField, j, i);
             }
